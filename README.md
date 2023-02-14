@@ -1,4 +1,4 @@
-# CS-437-IoT-Project
+# CS-437-IoT-Project: Pet Tracker in the House
 
 ### Introduction:
 
@@ -11,4 +11,6 @@ The application provides visualization like heatmaps to help people better under
 The technology we use is Bluetooth. Users have to attach special collar to their pets and install devices in each room. 
 
 This application can also be used on any items in the house like keys and wallet. 
+
+If our pets are lost in the wild, it is possible that other people who use our application will find our pets. So an advanced version of our application might be Airtags. 
 
