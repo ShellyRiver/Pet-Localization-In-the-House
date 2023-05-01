@@ -53,7 +53,7 @@ analyzed_features = {
 
 # Server IP and port
 server_ip = '192.168.10.33'
-server_port = 2333
+server_port = 12345
 
 def handle_connection(client_socket, client_address):
     raw_data = client_socket.recv(1024)
@@ -69,6 +69,10 @@ def handle_connection(client_socket, client_address):
 
 def receive_data(server_port):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
+    # Set the SO_REUSEADDR option to solve the issue of port occupying
+    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    
     server_socket.bind((server_ip, server_port))
     server_socket.listen()
 
@@ -78,6 +82,7 @@ def receive_data(server_port):
             client_socket, client_address = server_socket.accept()
             # Submit the client_socket to the thread pool
             executor.submit(handle_connection, client_socket, client_address)
+
 
 def analyze_data(raw_data_list):
     print(raw_data_list)

@@ -16,7 +16,7 @@ const char* password = "oooooooo";
 
 // Raspberry Pi IP address and port
 const char *raspberryPiIP = "192.168.10.33";
-const int raspberryPiPort = 2333;
+const int raspberryPiPort = 12345;
 
 IPAddress local_IP(192, 168, 10, 100); // Replace with your desired static IP address
 IPAddress gateway(192, 168, 10, 1);
