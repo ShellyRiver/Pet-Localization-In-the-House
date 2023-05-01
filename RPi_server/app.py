@@ -18,16 +18,16 @@ PET1 = 1
 # Global variables to store the raw and analyzed data
 # Map IP address of ESP32 to room identifier 
 rooms_ip = {
-    '': LIVING_ROOM,
-    '': BEDROOM_SMALL,
-    '': BEDROOM_LARGE,
-    '': BATHROOM
+    '192, 168, 10, 100': LIVING_ROOM,
+    '192, 168, 10, 101': BEDROOM_SMALL,
+    '192, 168, 10, 102': BEDROOM_LARGE,
+    '192, 168, 10, 103': BATHROOM
 }
 
 # Map bluetooth address to pet identifier
 pets_address = {
-    '': PET0,
-    '': PET1
+    'c8:a0:f1:69:d0:9c': PET0,   # the white tag
+    'c9:f2:08:ec:88:19': PET1    # the black one
 }
 
 # Data received from each room, each ESP32 sends data to RPi every 10 sec
@@ -83,6 +83,10 @@ def analyze_data(raw_data_list):
     print(raw_data_list)
     print("example data: ", raw_data_list[0], type(raw_data_list[0]))
 
+    # Update culmulated time
+
+    total_time += 1
+
     # Replace this with your actual data analysis logic
     analyzed_features = 0
 
@@ -90,12 +94,12 @@ def analyze_data(raw_data_list):
 
 @app.route('/')
 def index():
-    global analyzed_data
+    global analyzed_features
 
-    return render_template('index.html', data=analyzed_data)
+    return render_template('index.html', data=analyzed_features)
 
 if __name__ == '__main__':
-    data_receiver_thread = threading.Thread(target=receive_data, args=(12345,))
+    data_receiver_thread = threading.Thread(target=receive_data, args=(server_port,))
     data_receiver_thread.daemon = True
     data_receiver_thread.start()
 
