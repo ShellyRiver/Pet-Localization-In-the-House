@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Features</title>
+</head>
+<body>
+    <h1>Data Features</h1>
+    <table>
+        <tr>
+            <th>Feature Name</th>
+            <th>Value</th>
+        </tr>
+        {% for feature in features %}
+        <tr>
+            <td>{{ feature.name }}</td>
+            <td>{{ feature.value }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
