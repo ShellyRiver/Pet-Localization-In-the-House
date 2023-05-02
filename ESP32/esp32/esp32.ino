@@ -8,7 +8,7 @@
 #include <NimBLEAdvertisedDevice.h>
 
 // UUID of the tile tag, to search for target bluetooth low energy signal
-#define TILE_UUID "FEED"
+#define TILE_UUID "feed" // upper case not work
 
 // Wi-Fi ssid and password
 const char* ssid     = "smartmirror";
@@ -43,7 +43,7 @@ class MyAdvertisedDeviceCallbacks : public NimBLEAdvertisedDeviceCallbacks {
         TileTag tag;
         tag.address = advertisedDevice->getAddress().toString().c_str();
         tag.rssi = advertisedDevice->getRSSI();
-        Serial.println(tag.address + String(tag.rssi));
+        Serial.println(tag.address + ": " + String(tag.rssi));
         foundTileTags.push_back(tag);
       }
     }
@@ -89,12 +89,15 @@ void loop() {
     lastSendData = millis();
 
     WiFiClient client;
+    Serial.println(raspberryPiIP + String(raspberryPiPort));
     if (client.connect(raspberryPiIP, raspberryPiPort)) {
+      Serial.println("Connected successfully!");
       // Send RSSI data to Raspberry Pi
       for (const TileTag &tag : foundTileTags) {
         String dataToSend = tag.address + ", " + String(tag.rssi);
         client.println(dataToSend);
       }
+      Serial.println("data sent");
       client.stop();
 
       // Clear the found Tile Tags list

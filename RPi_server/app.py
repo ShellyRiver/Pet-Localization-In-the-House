@@ -18,10 +18,10 @@ PET1 = 1
 # Global variables to store the raw and analyzed data
 # Map IP address of ESP32 to room identifier 
 rooms_ip = {
-    '192, 168, 10, 100': LIVING_ROOM,
-    '192, 168, 10, 101': BEDROOM_SMALL,
-    '192, 168, 10, 102': BEDROOM_LARGE,
-    '192, 168, 10, 103': BATHROOM
+    '192.168.10.100': LIVING_ROOM,
+    '192.168.10.101': BEDROOM_SMALL,
+    '192.168.10.102': BEDROOM_LARGE,
+    '192.168.10.103': BATHROOM
 }
 
 # Map bluetooth address to pet identifier
@@ -61,7 +61,7 @@ def handle_connection(client_socket, client_address):
 
     # Add the received data to the raw_data_list
     global raw_data_list
-    raw_data_list[rooms_ip[client_address]] = raw_data.decode()
+    raw_data_list[rooms_ip[client_address[0]]] = raw_data.decode()
 
     # Analyze the combined data
     global analyzed_features
