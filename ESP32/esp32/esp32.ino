@@ -25,7 +25,7 @@ IPAddress primaryDNS(8, 8, 8, 8); // Google DNS
 IPAddress secondaryDNS(8, 8, 4, 4); // Google DNS
 
 // Time interval to send data to Raspberry Pi
-const unsigned long sendDataInterval = 10000; // 10s
+const unsigned long sendDataInterval = 20000; // 10s
 
 // Data structure to store found Tile Tags
 struct TileTag {
@@ -92,11 +92,17 @@ void loop() {
     Serial.println(raspberryPiIP + String(raspberryPiPort));
     if (client.connect(raspberryPiIP, raspberryPiPort)) {
       Serial.println("Connected successfully!");
+      Serial.print("Number of values sent: ");
+      Serial.println(foundTileTags.size());
+
       // Send RSSI data to Raspberry Pi
       for (const TileTag &tag : foundTileTags) {
         String dataToSend = tag.address + ", " + String(tag.rssi);
-        client.println(dataToSend);
+        client.print(dataToSend);
+        client.print(";");
+        delay(10);
       }
+      client.println();
       Serial.println("data sent");
       client.stop();
 
