@@ -56,16 +56,29 @@ server_ip = '192.168.10.33'
 server_port = 12345
 
 def handle_connection(client_socket, client_address):
-    raw_data = client_socket.recv(1024)
+    raw_data = b''
+    while True:
+        chunk = client_socket.recv(4096)
+        if not chunk:
+            break
+        raw_data += chunk
+
     client_socket.close()
 
+    # Split the received data using the newline character as the delimiter
+    data_values = raw_data.decode().split('\n')
+
+    # Remove any empty strings from the list of data values
+    data_values = [value for value in data_values if value]
+    
     # Add the received data to the raw_data_list
     global raw_data_list
-    raw_data_list[rooms_ip[client_address[0]]] = raw_data.decode()
+    raw_data_list[rooms_ip[client_address[0]]] = data_values
 
     # Analyze the combined data
     global analyzed_features
     analyzed_features = analyze_data(raw_data_list)
+
 
 def receive_data(server_port):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
