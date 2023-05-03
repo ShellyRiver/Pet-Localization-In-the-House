@@ -3,7 +3,6 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 from flask import Flask, render_template
 import numpy as np
-import time
 
 app = Flask(__name__)
 
@@ -40,10 +39,10 @@ pets_address = {
 }
 
 # Data received from each room, each ESP32 sends data to RPi every 20 sec
-raw_data_list = [-1, -1, -1, -1]
+raw_data_list = [[''], [''], [''], ['']]
 
 # Time spent in each room
-total_time = 1
+total_time = 0
 time_spent = [[0, 0, 0, 0], [0, 0, 0, 0]]
 
 # Features obtained from data, used to generate website
@@ -95,19 +94,27 @@ def receive_data(server_port):
 
     # Create a ThreadPoolExecutor to handle multiple connections
     with ThreadPoolExecutor() as executor:
-        start_time = time.time()
         while True:
-            client_socket, client_address = server_socket.accept()
-            # Submit the client_socket to the thread pool
-            executor.submit(handle_connection, client_socket, client_address)
+            received_rooms = np.zeros(TOTAL_ROOMS)
+            while True:
+                client_socket, client_address = server_socket.accept()
+                # Submit the client_socket to the thread pool
+                executor.submit(handle_connection, client_socket, client_address)
 
-            # Collecting data for 20 seconds
-            if time.time() - start_time >= COLLECTING_TIME:
-                break
+                # Record the received rooms
+                received_rooms[rooms_ip[client_address[0]]] = 1
+                print(received_rooms)
+                
+                # Collecting data until data from all rooms is collected
+                if np.sum(received_rooms) == TOTAL_ROOMS:
+                    break
 
-        # Analyze the combined data
-        global analyzed_features
-        analyzed_features = analyze_data(raw_data_list)
+            # Analyze the combined data
+            global analyzed_features, raw_data_list
+            analyzed_features = analyze_data(raw_data_list)
+            
+            # Clear the raw data list
+            raw_data_list = [[''], [''], [''], ['']]
 
 # Helper function to analyze received data
 # Compute the average rssi value for all bluetooth address in one room
@@ -115,6 +122,7 @@ def receive_data(server_port):
 def parse_and_average_rssi(data):
     rssi_dict = {}
     count_dict = {}
+    print(data)
 
     for item in data[0].strip().split(';'):
         if not item:
@@ -137,13 +145,14 @@ def parse_and_average_rssi(data):
 
 def analyze_data(raw_data_list):
     # Determine where is the pet
-    pet_locations = -np.ones(TOTAL_PETS)
+    pet_locations = np.full(TOTAL_PETS, -1, dtype=int)
     rssi_values = -float('inf') * np.ones(TOTAL_PETS)
     for r in range(TOTAL_ROOMS):
         avg_rssi = parse_and_average_rssi(raw_data_list[r])
         for bluetooth_addr in avg_rssi.keys():
             if bluetooth_addr in pets_address.keys() and avg_rssi[bluetooth_addr] > rssi_values[pets_address[bluetooth_addr]]:
-                pet_locations[pet_locations[bluetooth_addr]] = r
+                pet_locations[pets_address[bluetooth_addr]] = r
+                rssi_values[pets_address[bluetooth_addr]] = avg_rssi[bluetooth_addr]
 
     # Update culmulated time
     global total_time, time_spent
@@ -157,8 +166,9 @@ def analyze_data(raw_data_list):
     for pet in range(TOTAL_PETS):
         analyzed_features[pet] = {
             'room_located': pet_locations[pet],
-            'time_spent_percentage': time_spent[pet] / total_time
+            'time_spent_percentage': [t / total_time for t in time_spent[pet]]
         }
+    print(analyzed_features)
 
     return analyzed_features
 
