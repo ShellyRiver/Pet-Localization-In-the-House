@@ -1,0 +1,100 @@
+.room-name {
+    font-size: larger;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 500;
+    display: inline-block;
+    padding: 5px 10px;
+    color: #2C3E50;
+}
+
+.home {
+    position: relative;
+    width: 800px;
+    height: 600px;
+    margin: auto;
+}
+
+.room-block {
+    background-color: #AED6F1;
+    border: 4px solid #7FB3D5;
+    position: absolute;
+}
+
+.living-room {
+    width: 50%;
+    height: 65%;
+    left: 50%;
+    top: 0;
+}
+
+.pet-living-room {
+    left: calc(50% + 50% / 2);
+    top: calc(0 + 65% / 2);
+}
+
+.bedroom-small {
+    width: 30%;
+    height: 35%;
+    left: 70%;
+    top: calc(65% + 4px);
+}
+
+.pet-bedroom-small {
+    left: calc(70% + 30% / 2);
+    top: calc(65% + 4px + 35% / 2);
+}
+
+.bedroom-large {
+    width: 30%;
+    height: 50%;
+    left: 0;
+    top: 0;
+}
+
+.pet-bedroom-large {
+    left: calc(0 + 30% / 2);
+    top: calc(0 + 50% / 2);
+}
+
+.bathroom {
+    width: 20%;
+    height: 50%;
+    left: 30%;
+    top: 0;
+}
+
+.pet-bathroom {
+    left: calc(30% + 20% / 2);
+    top: calc(0 + 50% / 2);
+}
+
+.pet-outside {
+    left: 10%;
+    top: 50%;
+}
+
+.isle {
+    width: 50%;
+    height: 15%;
+    left: 0;
+    top: 50%;
+}
+
+.round-image-container {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    border-radius: 50%;
+    box-sizing: content-box;
+    margin: 20px;
+}
+
+.round-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+}
+

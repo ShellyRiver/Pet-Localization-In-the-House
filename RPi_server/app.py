@@ -6,8 +6,6 @@ import numpy as np
 
 app = Flask(__name__)
 
-COLLECTING_TIME = 20
-
 # Room identifier
 LIVING_ROOM = 0
 BEDROOM_SMALL = 1
@@ -60,7 +58,7 @@ analyzed_features = {
 }
 
 # Server IP and port
-server_ip = '192.168.10.33'
+server_ip = '192.168.137.1'#'192.168.10.33'
 server_port = 12345
 
 def handle_connection(client_socket, client_address):
@@ -172,16 +170,35 @@ def analyze_data(raw_data_list):
 
     return analyzed_features
 
+# dummy data for testing the website
+analyzed_features = {
+    PET0: {
+        'room_located': 1,
+        'time_spent_percentage': [0.5, 0.3877, 0.1123, 0]
+    },
+    PET1: {
+        'room_located': 2,
+        'time_spent_percentage': [0.33333, 0.3333, 0.3333, 0.3333]
+    }
+}
+
 @app.route('/')
 def index():
     global analyzed_features
 
     return render_template('index.html', data=analyzed_features)
 
+from flask import jsonify
+
+@app.route('/get_data')
+def get_data():
+    global analyzed_features
+    return jsonify(analyzed_features)
+
+
 if __name__ == '__main__':
     data_receiver_thread = threading.Thread(target=receive_data, args=(server_port,))
     data_receiver_thread.daemon = True
     data_receiver_thread.start()
 
-    app.run(host='0.0.0.0', port=80, debug=True, use_reloader=False)
-
+    app.run(host='127.0.0.1', port=80, debug=True, use_reloader=False)

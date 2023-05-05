@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Features</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <h1>Analyzed Features</h1>
@@ -25,5 +26,31 @@
             {% endfor %}
         </tbody>
     </table>
+    <div class="home" id="data-container" data-info="{{ data }}>
+        <div class="round-image-container pet-outside" id="pet0">
+            <img src="{{ url_for('static', filename='pet0.jpg') }}" alt="Pet0" class="round-image">
+        </div>
+        <div class="round-image-container pet-outside" id="pet1">
+            <img src="{{ url_for('static', filename='pet1.jpg') }}" alt="Pet1" class="round-image">
+        </div>
+        <div class="living-room room-block">
+            <span class="room-name">Living Room</span>
+        </div>
+        <div class="bedroom-small room-block">
+            <span class="room-name">Small Bedroom</span>
+        </div>
+        <div class="bedroom-large room-block">
+            <span class="room-name">Large Bedroom</span>
+        </div>
+        <div class="bathroom room-block">
+            <span class="room-name">Bathroom</span>
+        </div>
+        <div class="isle room-block">
+
+        </div>
+    </div>
+        
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
