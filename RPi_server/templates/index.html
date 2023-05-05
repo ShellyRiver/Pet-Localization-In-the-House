@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Features</title>
+    <title>Where Are My Cats?</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
@@ -26,11 +26,11 @@
             {% endfor %}
         </tbody>
     </table>
-    <div class="home" id="data-container" data-info="{{ data }}>
+    <div class="home" id="data-container" data-info="{{ data | safe }}">
         <div class="round-image-container pet-outside" id="pet0">
             <img src="{{ url_for('static', filename='pet0.jpg') }}" alt="Pet0" class="round-image">
         </div>
-        <div class="round-image-container pet-outside" id="pet1">
+        <div class="round-image-container pet-outside image-container-right" id="pet1">
             <img src="{{ url_for('static', filename='pet1.jpg') }}" alt="Pet1" class="round-image">
         </div>
         <div class="living-room room-block">
@@ -50,7 +50,9 @@
         </div>
     </div>
         
-    
+    <script>
+        const data = {{ data | tojson | safe }};
+    </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

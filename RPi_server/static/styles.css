@@ -28,8 +28,8 @@
 }
 
 .pet-living-room {
-    left: calc(50% + 50% / 2);
-    top: calc(0 + 65% / 2);
+    left: calc(50% + 50% / 2 - (60px + 10px) / 2);
+    top: calc(0px + 65% / 2 - (60px) / 2);
 }
 
 .bedroom-small {
@@ -40,8 +40,8 @@
 }
 
 .pet-bedroom-small {
-    left: calc(70% + 30% / 2);
-    top: calc(65% + 4px + 35% / 2);
+    left: calc(70% + 30% / 2 - (60px + 10px) / 2);
+    top: calc(65% + 4px + 35% / 2 - (60px) / 2);
 }
 
 .bedroom-large {
@@ -52,8 +52,8 @@
 }
 
 .pet-bedroom-large {
-    left: calc(0 + 30% / 2);
-    top: calc(0 + 50% / 2);
+    left: calc(0px + 30% / 2 - (60px + 10px) / 2);
+    top: calc(0px + 50% / 2 - (60px) / 2);
 }
 
 .bathroom {
@@ -64,8 +64,8 @@
 }
 
 .pet-bathroom {
-    left: calc(30% + 20% / 2);
-    top: calc(0 + 50% / 2);
+    left: calc(30% + 20% / 2 - (60px + 10px) / 2);
+    top: calc(0px + 50% / 2 - (60px) / 2);
 }
 
 .pet-outside {
@@ -81,14 +81,15 @@
 }
 
 .round-image-container {
-    position: relative;
+    position: absolute;
     display: inline-block;
     width: 60px;
     height: 60px;
     overflow: hidden;
     border-radius: 50%;
     box-sizing: content-box;
-    margin: 20px;
+    margin: 5px;
+    z-index: 1;
 }
 
 .round-image {
@@ -96,5 +97,9 @@
     height: 100%;
     object-fit: cover;
     position: absolute;
+}
+
+.image-container-right {
+    margin-right: 60px;
 }
 

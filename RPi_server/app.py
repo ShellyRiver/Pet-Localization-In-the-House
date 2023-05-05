@@ -3,6 +3,7 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 from flask import Flask, render_template
 import numpy as np
+import json
 
 app = Flask(__name__)
 
@@ -47,13 +48,13 @@ time_spent = [[0, 0, 0, 0], [0, 0, 0, 0]]
 # Including: located room of each pet of this 20 sec
 #            the time percentage spent in each room of each pet over the history
 analyzed_features = {
-    PET0: {
-        'room_located': -1,
-        'time_spent_percentage': [-1, -1, -1, -1]
+    str(PET0): {
+        "room_located": -1,
+        "time_spent_percentage": [-1, -1, -1, -1]
     },
-    PET1: {
-        'room_located': -1,
-        'time_spent_percentage': [-1, -1, -1, -1]
+    str(PET1): {
+        "room_located": -1,
+        "time_spent_percentage": [-1, -1, -1, -1]
     }
 }
 
@@ -162,9 +163,9 @@ def analyze_data(raw_data_list):
     # Fill in analyzed features
     analyzed_features = {}
     for pet in range(TOTAL_PETS):
-        analyzed_features[pet] = {
-            'room_located': pet_locations[pet],
-            'time_spent_percentage': [t / total_time for t in time_spent[pet]]
+        analyzed_features[str(pet)] = {
+            "room_located": pet_locations[pet],
+            "time_spent_percentage": [t / total_time for t in time_spent[pet]]
         }
     print(analyzed_features)
 
@@ -172,29 +173,21 @@ def analyze_data(raw_data_list):
 
 # dummy data for testing the website
 analyzed_features = {
-    PET0: {
-        'room_located': 1,
-        'time_spent_percentage': [0.5, 0.3877, 0.1123, 0]
+    str(PET0): {
+        "room_located": 1,
+        "time_spent_percentage": [0.5, 0.3877, 0.1123, 0]
     },
-    PET1: {
-        'room_located': 2,
-        'time_spent_percentage': [0.33333, 0.3333, 0.3333, 0.3333]
+    str(PET1): {
+        "room_located": 2,
+        "time_spent_percentage": [0.33333, 0.3333, 0.3333, 0.3333]
     }
 }
 
 @app.route('/')
 def index():
     global analyzed_features
-
+    
     return render_template('index.html', data=analyzed_features)
-
-from flask import jsonify
-
-@app.route('/get_data')
-def get_data():
-    global analyzed_features
-    return jsonify(analyzed_features)
-
 
 if __name__ == '__main__':
     data_receiver_thread = threading.Thread(target=receive_data, args=(server_port,))
