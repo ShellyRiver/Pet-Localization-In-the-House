@@ -7,52 +7,47 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Analyzed Features</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>PET</th>
-                <th>Room Located</th>
-                <th>Time Spent Percentage</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for pet, features in data.items() %}
-            <tr>
-                <td>{{ pet }}</td>
-                <td>{{ features.room_located }}</td>
-                <td>{{ features.time_spent_percentage|join(', ') }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <div class="home" id="data-container" data-info="{{ data | safe }}">
-        <div class="round-image-container pet-outside" id="pet0">
-            <img src="{{ url_for('static', filename='pet0.jpg') }}" alt="Pet0" class="round-image">
+    <div class="container">
+        <div>
+            <div class="home" id="data-container" data-info="{{ data | safe }}">
+                <div class="round-image-container pet-outside image-container-left border0" id="pet0">
+                    <img src="{{ url_for('static', filename='pet0.jpg') }}" alt="Pet0" class="round-image">
+                </div>
+                <div class="round-image-container pet-outside image-container-right border1" id="pet1">
+                    <img src="{{ url_for('static', filename='pet1.jpg') }}" alt="Pet1" class="round-image">
+                </div>
+                <div class="living-room room-block">
+                    <span class="room-name">Living Room</span>
+                </div>
+                <div class="bedroom-small room-block">
+                    <span class="room-name">Small Bedroom</span>
+                </div>
+                <div class="bedroom-large room-block">
+                    <span class="room-name">Large Bedroom</span>
+                </div>
+                <div class="bathroom room-block">
+                    <span class="room-name">Bathroom</span>
+                </div>
+                <div class="isle room-block"></div>
+            </div>
         </div>
-        <div class="round-image-container pet-outside image-container-right" id="pet1">
-            <img src="{{ url_for('static', filename='pet1.jpg') }}" alt="Pet1" class="round-image">
-        </div>
-        <div class="living-room room-block">
-            <span class="room-name">Living Room</span>
-        </div>
-        <div class="bedroom-small room-block">
-            <span class="room-name">Small Bedroom</span>
-        </div>
-        <div class="bedroom-large room-block">
-            <span class="room-name">Large Bedroom</span>
-        </div>
-        <div class="bathroom room-block">
-            <span class="room-name">Bathroom</span>
-        </div>
-        <div class="isle room-block">
-
+        <div class="chart">
+            <div>
+                <span class="chart-title">Time Spent Percentage</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="pie-chart0"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="pie-chart1"></canvas>
+            </div>
         </div>
     </div>
-        
+    
     <script>
         const data = {{ data | tojson | safe }};
     </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>

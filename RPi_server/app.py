@@ -42,7 +42,7 @@ raw_data_list = [[''], [''], [''], ['']]
 
 # Time spent in each room
 total_time = 0
-time_spent = [[0, 0, 0, 0], [0, 0, 0, 0]]
+time_spent = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
 
 # Features obtained from data, used to generate website
 # Including: located room of each pet of this 20 sec
@@ -50,11 +50,11 @@ time_spent = [[0, 0, 0, 0], [0, 0, 0, 0]]
 analyzed_features = {
     str(PET0): {
         "room_located": -1,
-        "time_spent_percentage": [-1, -1, -1, -1]
+        "time_spent_percentage": [-1, -1, -1, -1, -1]
     },
     str(PET1): {
         "room_located": -1,
-        "time_spent_percentage": [-1, -1, -1, -1]
+        "time_spent_percentage": [-1, -1, -1, -1, -1]
     }
 }
 
@@ -157,8 +157,7 @@ def analyze_data(raw_data_list):
     global total_time, time_spent
     total_time += 1
     for pet in range(TOTAL_PETS):
-        if pet_locations[pet] != OUTSIDE:
-            time_spent[pet][pet_locations[pet]] += 1
+        time_spent[pet][pet_locations[pet]] += 1
 
     # Fill in analyzed features
     analyzed_features = {}
@@ -174,12 +173,12 @@ def analyze_data(raw_data_list):
 # dummy data for testing the website
 analyzed_features = {
     str(PET0): {
-        "room_located": 1,
-        "time_spent_percentage": [0.5, 0.3877, 0.1123, 0]
+        "room_located": -1,
+        "time_spent_percentage": [0.3, 0.3877, 0.1123, 0, 0.2]
     },
     str(PET1): {
-        "room_located": 2,
-        "time_spent_percentage": [0.33333, 0.3333, 0.3333, 0.3333]
+        "room_located": -1,
+        "time_spent_percentage": [0.33333, 0.3333, 0.3333, 0.1333, 0.2]
     }
 }
 
