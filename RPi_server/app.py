@@ -3,7 +3,6 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 from flask import Flask, render_template
 import numpy as np
-import json
 
 app = Flask(__name__)
 
@@ -142,8 +141,49 @@ def parse_and_average_rssi(data):
     
     return avg_rssi
 
+observations = [[], []]
+
+# Use Hidden Markov Model to improve accuracy
+# O: observations
+# model: - A, the state transition probability matrix of size N x N, where N represents the number of hidden states(or true states).
+#        - B, the observation probability matrix of size N x M, where M represents the number of observed states. Here, M = N.
+#        - pi, an initial distribution vector of size 1 x N
+def forward_algorithm(O):
+    model = {
+        'A': np.array([[0.7, 0.16, 0.05, 0.08, 0.01],   # from living room to other rooms
+                       [0.2,  0.7, 0.03, 0.06, 0.01],   # from small bedroom to other rooms
+                       [0.23, 0.14, 0.5, 0.11, 0.02],   # from large bedroom to other rooms
+                       [0.4, 0.24, 0.05, 0.3,  0.01],   # from bathroom to other rooms
+                       [0.15, 0.02, 0.02, 0.01, 0.8]]), # from outside to each rooms
+        'B': np.array([[0.85, 0.02, 0.02, 0.1, 0.01],
+                       [0.15, 0.8, 0, 0.05, 0],
+                       [0.0625, 0, 0.9, 0.0375, 0],
+                       [0.025, 0, 0.013, 0.95, 0.012],
+                       [0.05, 0, 0.05, 0, 0.9]]),
+        'pi': np.array([0.4, 0.4, 0.09, 0.1, 0.01])
+    }
+
+    max_len = 30 # set the max length of observation to avoid being too long
+    num_states = model['A'].shape[0]
+    if len(O) > max_len:
+        O = O[-max_len:]
+    num_obs = len(O)
+    
+    # Initialization
+    alpha = np.zeros((num_states, num_obs))
+    alpha[:, 0] = model['pi'] * model['B'][:, O[0]]
+    
+    # Recursion
+    for t in range(1, num_obs):
+        for j in range(num_states):
+            alpha[j, t] = model['B'][j, O[t]] * np.sum(alpha[:, t-1] * model['A'][:, j])
+
+    # Return the most likely hidden state at the last time step
+    time_step = alpha.shape[1] - 1
+    return np.argmax(alpha[:, time_step])
+
 def analyze_data(raw_data_list):
-    # Determine where is the pet
+    # Determine where is the pet based on the measurement
     pet_locations = np.full(TOTAL_PETS, -1, dtype=int)
     rssi_values = -float('inf') * np.ones(TOTAL_PETS)
     for r in range(TOTAL_ROOMS):
@@ -152,11 +192,13 @@ def analyze_data(raw_data_list):
             if bluetooth_addr in pets_address.keys() and avg_rssi[bluetooth_addr] > rssi_values[pets_address[bluetooth_addr]]:
                 pet_locations[pets_address[bluetooth_addr]] = r
                 rssi_values[pets_address[bluetooth_addr]] = avg_rssi[bluetooth_addr]
-
-    # Update culmulated time
-    global total_time, time_spent
-    total_time += 1
+    
+    # Determine where is the pet using HMM and update culmulated time
+    global observations, total_time, time_spent
+    total_time += 1   
     for pet in range(TOTAL_PETS):
+        observations[pet].append(pet_locations[pet])
+        pet_locations[pet] = forward_algorithm(observations[pet])
         time_spent[pet][pet_locations[pet]] += 1
 
     # Fill in analyzed features
@@ -173,11 +215,11 @@ def analyze_data(raw_data_list):
 # dummy data for testing the website
 analyzed_features = {
     str(PET0): {
-        "room_located": -1,
+        "room_located": 1,
         "time_spent_percentage": [0.3, 0.3877, 0.1123, 0, 0.2]
     },
     str(PET1): {
-        "room_located": -1,
+        "room_located": 0,
         "time_spent_percentage": [0.33333, 0.3333, 0.3333, 0.1333, 0.2]
     }
 }
