@@ -1,6 +1,6 @@
-// setTimeout(function(){
-//     location.reload();
-// }, 5000);
+setTimeout(function(){
+    location.reload();
+}, 5000);
 
 const room_idx_to_pos_class = {
     "0" : "pet-living-room",
@@ -75,10 +75,13 @@ function createPieChart(chartId, data) {
                     display: false
                 },
                 customBorder: {
-                    borderColor: '#000000',
                     borderWidth: 5
                 }
-            }
+            },
+            animation: {
+                duration: 1
+            },
+
         },
         plugins: [{
             id: 'customBorder',

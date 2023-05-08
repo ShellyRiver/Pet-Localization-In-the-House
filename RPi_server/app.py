@@ -58,7 +58,7 @@ analyzed_features = {
 }
 
 # Server IP and port
-server_ip = '192.168.137.1'#'192.168.10.33'
+server_ip = '192.168.10.33'
 server_port = 12345
 
 def handle_connection(client_socket, client_address):
@@ -205,7 +205,7 @@ def analyze_data(raw_data_list):
     analyzed_features = {}
     for pet in range(TOTAL_PETS):
         analyzed_features[str(pet)] = {
-            "room_located": pet_locations[pet],
+            "room_located": int(pet_locations[pet]),
             "time_spent_percentage": [t / total_time for t in time_spent[pet]]
         }
     print(analyzed_features)
@@ -235,4 +235,4 @@ if __name__ == '__main__':
     data_receiver_thread.daemon = True
     data_receiver_thread.start()
 
-    app.run(host='127.0.0.1', port=80, debug=True, use_reloader=False)
+    app.run(host='0.0.0.0', port=80, debug=True, use_reloader=False)
