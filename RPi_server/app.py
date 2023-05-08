@@ -150,8 +150,8 @@ observations = [[], []]
 #        - pi, an initial distribution vector of size 1 x N
 def forward_algorithm(O):
     model = {
-        'A': np.array([[0.7, 0.16, 0.05, 0.08, 0.01],   # from living room to other rooms
-                       [0.2,  0.7, 0.03, 0.06, 0.01],   # from small bedroom to other rooms
+        'A': np.array([[0.8, 0.12, 0.03, 0.045, 0.005],   # from living room to other rooms
+                       [0.12,  0.8, 0.03, 0.045, 0.005],   # from small bedroom to other rooms
                        [0.23, 0.14, 0.5, 0.11, 0.02],   # from large bedroom to other rooms
                        [0.4, 0.24, 0.05, 0.3,  0.01],   # from bathroom to other rooms
                        [0.15, 0.02, 0.02, 0.01, 0.8]]), # from outside to each rooms
